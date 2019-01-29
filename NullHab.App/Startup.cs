@@ -26,7 +26,11 @@ namespace NullHab.App
             services.AddTransient<IUserStore<User>, UserStore>();
             services.AddTransient<IRoleStore<Role>, RoleStore>();
 
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+#if DEBUG
+            var connectionString = Configuration.GetConnectionString("LocalConnection");
+#else
+            var connectionString = Configuration.GetConnectionString("ProductionConnection");
+#endif
             services.AddTransient(provider => (new UserTable(connectionString)));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
