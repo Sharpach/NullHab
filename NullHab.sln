@@ -9,6 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullHab.DAL", "NullHab.DAL\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullHab.Tests", "NullHab.Tests\NullHab.Tests.csproj", "{01A726B2-CF5D-4F02-BFC0-44D80B986294}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BLL", "BLL", "{55C07DC0-6762-40BF-8485-82528523A6E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NullHab.AuthCore", "NullHab.AuthCore\NullHab.AuthCore.csproj", "{D9F603AC-0038-455D-A4CE-E85A810D4AE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,9 +31,16 @@ Global
 		{01A726B2-CF5D-4F02-BFC0-44D80B986294}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01A726B2-CF5D-4F02-BFC0-44D80B986294}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01A726B2-CF5D-4F02-BFC0-44D80B986294}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9F603AC-0038-455D-A4CE-E85A810D4AE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9F603AC-0038-455D-A4CE-E85A810D4AE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9F603AC-0038-455D-A4CE-E85A810D4AE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9F603AC-0038-455D-A4CE-E85A810D4AE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D9F603AC-0038-455D-A4CE-E85A810D4AE4} = {55C07DC0-6762-40BF-8485-82528523A6E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {C6420EB0-33C9-4411-99CE-87CA3DE1EC32}
