@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NullHab.DAL.Models;
+using NullHab.DAL.Providers.Identity;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NullHab.App.Controllers
 {
@@ -7,6 +10,13 @@ namespace NullHab.App.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly UserTable _userTable;
+
+        public ValuesController(UserTable userTable)
+        {
+            _userTable = userTable;
+        }
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -23,8 +33,14 @@ namespace NullHab.App.Controllers
 
         // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task Post()
         {
+            await _userTable.CreateAsync(new User
+            {
+                Email = "testValue@mail.com",
+                PasswordHash = "AALj124AF8Asm192AM",
+                UserName = "TestValue1"
+            });
         }
 
         // PUT api/values/5

@@ -18,14 +18,12 @@ namespace NullHab.DAL.Providers.Identity
 
         public async Task<IdentityResult> CreateAsync(User user)
         {
-            var sql = "INSERT INTO dbo.CustomUser " +
-                         "VALUES (@id, @Email, @EmailConfirmed, @PasswordHash, @UserName)";
+            var sql = "INSERT INTO dbo.CustomUser (Email, PasswordHash, UserName)" +
+                         "VALUES (@Email, @PasswordHash, @UserName)";
 
             using (var conn = OpenConnection(_connectionString))
             {
-                conn.Open();
-
-                var rows = await conn.ExecuteAsync(sql, new { user.Id, user.Email, user.PasswordHash, user.UserName });
+                var rows = await conn.ExecuteAsync(sql, new { user.Email, user.PasswordHash, user.UserName });
 
                 if (rows > 0)
                 {
