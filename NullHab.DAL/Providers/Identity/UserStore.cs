@@ -17,7 +17,7 @@ namespace NullHab.DAL.Providers.Identity
             _userTable = userTable;
         }
 
-        public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (user == null)
@@ -28,17 +28,29 @@ namespace NullHab.DAL.Providers.Identity
             return await _userTable.CreateAsync(user);
         }
 
-        public Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return await _userTable.DeleteAsync(user);
         }
 
-        public Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken)
+        public async Task<User> FindByIdAsync(string userId, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (userId == null || !long.TryParse(userId, out var id))
+            {
+                throw new ArgumentNullException(nameof(userId));
+            }
+
+            return await _userTable.FindByIdAsync(id);
         }
 
-        public async Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public async Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken = default(CancellationToken))
         {
             cancellationToken.ThrowIfCancellationRequested();
             if (normalizedUserName == null)
@@ -62,7 +74,13 @@ namespace NullHab.DAL.Providers.Identity
 
         public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return Task.FromResult(user.Id.ToString());
         }
 
         public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
@@ -86,17 +104,32 @@ namespace NullHab.DAL.Providers.Identity
 
             user.NormalizedUserName = normalizedName ?? throw new ArgumentNullException(nameof(normalizedName));
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            user.UserName = userName ?? throw new ArgumentNullException(nameof(userName));
+
+            return Task.CompletedTask;
         }
 
         public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return _userTable.UpdateAsync(user);
         }
 
         public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
@@ -122,7 +155,6 @@ namespace NullHab.DAL.Providers.Identity
 
         public void Dispose()
         {
-            throw new NotImplementedException();
         }
 
         public Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
@@ -177,7 +209,7 @@ namespace NullHab.DAL.Providers.Identity
 
             user.NormalizedEmail = normalizedEmail ?? throw new ArgumentNullException(nameof(normalizedEmail));
 
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)
