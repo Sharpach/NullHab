@@ -18,12 +18,12 @@ namespace NullHab.DAL.Providers.Identity
 
         public async Task<IdentityResult> CreateAsync(User user)
         {
-            var sql = "INSERT INTO dbo.CustomUser (Email, PasswordHash, UserName)" +
-                         "VALUES (@Email, @PasswordHash, @UserName)";
+            var sql = "INSERT INTO dbo.CustomUser (Email, NormalizedEmail, PasswordHash, UserName, NormalizedUserName)" +
+                         "VALUES (@Email, @NormalizedEmail, @PasswordHash, @UserName, @NormalizedUserName)";
 
             using (var conn = OpenConnection(_connectionString))
             {
-                var rows = await conn.ExecuteAsync(sql, new { user.Email, user.PasswordHash, user.UserName });
+                var rows = await conn.ExecuteAsync(sql, new { user.Email, user.NormalizedEmail, user.PasswordHash, user.UserName, user.NormalizedUserName });
 
                 if (rows > 0)
                 {
@@ -32,6 +32,21 @@ namespace NullHab.DAL.Providers.Identity
             }
 
             return IdentityResult.Failed(new IdentityError { Description = $"Could not insert user {user.Email}." });
+        }
+
+        public async Task<User> FindByNameAsync(string normalizedUserName)
+        {
+            var sql = "SELECT * " +
+                         "FROM dbo.CustomUser " +
+                         "WHERE UserName = @UserName;";
+
+            using (var conn = OpenConnection(_connectionString))
+            {
+                return await conn.QuerySingleOrDefaultAsync<User>(sql, new
+                {
+                    UserName = normalizedUserName
+                });
+            }
         }
 
         private static IDbConnection OpenConnection(string connStr)

@@ -38,14 +38,26 @@ namespace NullHab.DAL.Providers.Identity
             throw new NotImplementedException();
         }
 
-        public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
+        public async Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (normalizedUserName == null)
+            {
+                throw new ArgumentNullException(nameof(normalizedUserName));
+            }
+
+            return await _userTable.FindByNameAsync(normalizedUserName);
         }
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return Task.FromResult(user.NormalizedUserName);
         }
 
         public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
@@ -55,12 +67,26 @@ namespace NullHab.DAL.Providers.Identity
 
         public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return Task.FromResult(user.UserName);
         }
 
         public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            user.NormalizedUserName = normalizedName ?? throw new ArgumentNullException(nameof(normalizedName));
+
+            return Task.FromResult<object>(null);
         }
 
         public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
@@ -80,7 +106,13 @@ namespace NullHab.DAL.Providers.Identity
 
         public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return Task.FromResult(user.PasswordHash);
         }
 
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
@@ -100,7 +132,13 @@ namespace NullHab.DAL.Providers.Identity
 
         public Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return Task.FromResult(user.Email);
         }
 
         public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
@@ -120,12 +158,26 @@ namespace NullHab.DAL.Providers.Identity
 
         public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return Task.FromResult(user.NormalizedUserName);
         }
 
         public Task SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            user.NormalizedEmail = normalizedEmail ?? throw new ArgumentNullException(nameof(normalizedEmail));
+
+            return Task.FromResult<object>(null);
         }
 
         public Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)

@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using NullHab.DAL.Models;
-using NullHab.DAL.Providers.Identity;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -10,11 +10,11 @@ namespace NullHab.App.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-        private readonly UserTable _userTable;
+        private readonly UserManager<User> _userManager;
 
-        public ValuesController(UserTable userTable)
+        public ValuesController(UserManager<User> userManager)
         {
-            _userTable = userTable;
+            _userManager = userManager;
         }
 
         // GET api/values
@@ -35,7 +35,7 @@ namespace NullHab.App.Controllers
         [HttpPost]
         public async Task Post()
         {
-            await _userTable.CreateAsync(new User
+            await _userManager.CreateAsync(new User
             {
                 Email = "testValue@mail.com",
                 PasswordHash = "AALj124AF8Asm192AM",
