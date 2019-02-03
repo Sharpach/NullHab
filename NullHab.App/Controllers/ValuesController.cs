@@ -25,10 +25,10 @@ namespace NullHab.App.Controllers
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet("{name}")]
+        public async Task<JsonResult> Get(string name)
         {
-            return "value";
+            return new JsonResult(await _userManager.FindByNameAsync(name));
         }
 
         // POST api/values
@@ -37,9 +37,9 @@ namespace NullHab.App.Controllers
         {
             await _userManager.CreateAsync(new User
             {
-                Email = "testValue@mail.com",
+                Email = "testValue4@mail.com",
                 PasswordHash = "AALj124AF8Asm192AM",
-                UserName = "TestValue1"
+                UserName = "TestValue2"
             });
         }
 
