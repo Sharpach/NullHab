@@ -88,6 +88,7 @@ namespace NullHab.App
             }
 
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
