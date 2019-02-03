@@ -24,15 +24,15 @@ namespace NullHab.App
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddIdentity<User, Role>(opts =>
+            services.AddIdentity<User, Role>(options =>
                 {
                     //Можно переопределить свой валидатор, если понадобится
-                    opts.Password.RequiredLength = 8;
-                    opts.Password.RequireNonAlphanumeric = false; // требуются ли не алфавитно-цифровые символы
-                    opts.Password.RequireUppercase = true;
-                    opts.Password.RequireDigit = true; // требуются ли цифры
+                    options.Password.RequiredLength = 8;
+                    options.Password.RequireNonAlphanumeric = false; // требуются ли не алфавитно-цифровые символы
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireDigit = true; // требуются ли цифры
 
-                    opts.User.RequireUniqueEmail = true;
+                    options.User.RequireUniqueEmail = true;
                 })
                 .AddDefaultTokenProviders();
 

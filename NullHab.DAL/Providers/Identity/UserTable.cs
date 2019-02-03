@@ -114,10 +114,10 @@ namespace NullHab.DAL.Providers.Identity
 
             return IdentityResult.Failed(new IdentityError { Description = $"Could not update user {user.Email}." });
         }
-
-        private static IDbConnection OpenConnection(string connStr)
+        
+        private static IDbConnection OpenConnection(string connectionString)
         {
-            var conn = new NpgsqlConnection(connStr);
+            var conn = new NpgsqlConnection(connectionString);
             conn.Open();
             return conn;
         }

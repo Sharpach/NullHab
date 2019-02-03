@@ -131,7 +131,7 @@ namespace NullHab.DAL.Providers.Identity
 
             return _userTable.UpdateAsync(user);
         }
-        
+
         public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -170,7 +170,7 @@ namespace NullHab.DAL.Providers.Identity
         public void Dispose()
         {
         }
-        
+
         public Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -194,10 +194,16 @@ namespace NullHab.DAL.Providers.Identity
 
             return Task.FromResult(user.Email);
         }
-        //implemented
-        public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+
+        public async Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken))
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (normalizedEmail == null)
+            {
+                throw new ArgumentNullException(nameof(normalizedEmail));
+            }
+
+            return await _userTable.FindByEmailAsync(normalizedEmail);
         }
 
         public Task<string> GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
@@ -223,7 +229,7 @@ namespace NullHab.DAL.Providers.Identity
 
             return Task.CompletedTask;
         }
-
+        //implemented
         public Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
