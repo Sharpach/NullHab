@@ -1,19 +1,14 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Identity;
-using Npgsql;
 using NullHab.DAL.Models;
-using System.Data;
 using System.Threading.Tasks;
 
 namespace NullHab.DAL.Providers.Identity
 {
-    public class UserTable
+    public class UserTable : DapperTable
     {
-        private readonly string _connectionString;
-
-        public UserTable(string connectionString)
+        public UserTable(string connectionString) : base(connectionString)
         {
-            _connectionString = connectionString;
         }
 
         public async Task<IdentityResult> CreateAsync(User user)
@@ -113,13 +108,6 @@ namespace NullHab.DAL.Providers.Identity
             }
 
             return IdentityResult.Failed(new IdentityError { Description = $"Could not update user {user.Email}." });
-        }
-        
-        private static IDbConnection OpenConnection(string connectionString)
-        {
-            var conn = new NpgsqlConnection(connectionString);
-            conn.Open();
-            return conn;
         }
     }
 }

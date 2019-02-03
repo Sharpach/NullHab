@@ -2,6 +2,7 @@
 using NullHab.DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,10 +12,12 @@ namespace NullHab.DAL.Providers.Identity
     public class UserStore : IUserPasswordStore<User>, IUserEmailStore<User>, IUserClaimStore<User>, IUserRoleStore<User>
     {
         private readonly UserTable _userTable;
+        private readonly UserClaimsTable _userClaimsTable;
 
-        public UserStore(UserTable userTable)
+        public UserStore(UserTable userTable, UserClaimsTable userClaimsTable)
         {
             _userTable = userTable;
+            _userClaimsTable = userClaimsTable;
         }
 
         public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken = default(CancellationToken))
@@ -229,32 +232,97 @@ namespace NullHab.DAL.Providers.Identity
 
             return Task.CompletedTask;
         }
+
+        public async Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return (await _userClaimsTable.FindByUserId(user.Id)).Claims.ToList();
+        }
+
+        public async Task AddClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            if (claims == null)
+            {
+                throw new ArgumentNullException(nameof(claims));
+            }
+
+            foreach (var claim in claims)
+            {
+                await _userClaimsTable.InsertAsync(claim, user.Id);
+            }
+        }
+
+        public async Task ReplaceClaimAsync(User user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            if (claim == null)
+            {
+                throw new ArgumentNullException(nameof(claim));
+            }
+
+            if (newClaim == null)
+            {
+                throw new ArgumentNullException(nameof(newClaim));
+            }
+
+            await _userClaimsTable.UpdateAsync(claim, newClaim, user.Id);
+        }
+
+        public async Task RemoveClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            if (claims == null)
+            {
+                throw new ArgumentNullException(nameof(claims));
+            }
+
+            foreach (var claim in claims)
+            {
+                await _userClaimsTable.DeleteAsync(user.Id, claim);
+            }
+        }
+
+        public async Task<IList<User>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (claim == null)
+            {
+                throw new ArgumentNullException(nameof(claim));
+            }
+
+            var userIds = await _userClaimsTable.GetUserIdsByClaim(claim);
+
+            var users = new List<User>();
+
+            foreach (var userId in userIds)
+            {
+                users.Add(await _userTable.FindByIdAsync(userId));
+            }
+
+            return users;
+        }
         //implemented
-        public Task<IList<Claim>> GetClaimsAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task AddClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task ReplaceClaimAsync(User user, Claim claim, Claim newClaim, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task RemoveClaimsAsync(User user, IEnumerable<Claim> claims, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IList<User>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();

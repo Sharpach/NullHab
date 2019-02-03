@@ -71,7 +71,8 @@ namespace NullHab.App
 #else
             var connectionString = Configuration.GetConnectionString("ProductionConnection");
 #endif
-            services.AddTransient(provider => (new UserTable(connectionString)));
+            services.AddTransient(provider => new UserTable(connectionString));
+            services.AddTransient(provider => new UserClaimsTable(connectionString));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

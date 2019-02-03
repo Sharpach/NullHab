@@ -1,5 +1,5 @@
 ﻿CREATE TABLE dbo.CustomUser (
-    id			bigserial CONSTRAINT id PRIMARY KEY,
+    id			bigserial CONSTRAINT userId PRIMARY KEY,
     Email		varchar (100) ,
     NormalizedEmail	varchar (100) ,
     PasswordHash	varchar (4000),
