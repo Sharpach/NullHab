@@ -131,10 +131,18 @@ namespace NullHab.DAL.Providers.Identity
 
             return _userTable.UpdateAsync(user);
         }
-
+        
         public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            user.PasswordHash = passwordHash ?? throw new ArgumentNullException(nameof(passwordHash));
+
+            return Task.CompletedTask;
         }
 
         public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
@@ -150,16 +158,30 @@ namespace NullHab.DAL.Providers.Identity
 
         public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
         }
 
         public void Dispose()
         {
         }
-
+        
         public Task SetEmailAsync(User user, string email, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            cancellationToken.ThrowIfCancellationRequested();
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+
+            user.Email = email ?? throw new ArgumentNullException(nameof(email));
+
+            return Task.CompletedTask;
         }
 
         public Task<string> GetEmailAsync(User user, CancellationToken cancellationToken)
@@ -172,17 +194,7 @@ namespace NullHab.DAL.Providers.Identity
 
             return Task.FromResult(user.Email);
         }
-
-        public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
+        //implemented
         public Task<User> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
@@ -258,6 +270,16 @@ namespace NullHab.DAL.Providers.Identity
         }
 
         public Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

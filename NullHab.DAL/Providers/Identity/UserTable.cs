@@ -55,13 +55,28 @@ namespace NullHab.DAL.Providers.Identity
         {
             var sql = "SELECT * " +
                          "FROM dbo.CustomUser " +
-                         "WHERE UserName = @UserName;";
+                         "WHERE normalizedusername = @UserName;";
 
             using (var conn = OpenConnection(_connectionString))
             {
                 return await conn.QuerySingleOrDefaultAsync<User>(sql, new
                 {
                     UserName = normalizedUserName
+                });
+            }
+        }
+
+        public async Task<User> FindByEmailAsync(string normalizedEmail)
+        {
+            var sql = "SELECT * " +
+                      "FROM dbo.CustomUser " +
+                      "WHERE normalizedemail = @Email;";
+
+            using (var conn = OpenConnection(_connectionString))
+            {
+                return await conn.QuerySingleOrDefaultAsync<User>(sql, new
+                {
+                    Email = normalizedEmail
                 });
             }
         }
