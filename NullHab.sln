@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullHab.Tests", "NullHab.Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BLL", "BLL", "{55C07DC0-6762-40BF-8485-82528523A6E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NullHab.AuthCore", "NullHab.AuthCore\NullHab.AuthCore.csproj", "{D9F603AC-0038-455D-A4CE-E85A810D4AE4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NullHab.AuthCore", "NullHab.AuthCore\NullHab.AuthCore.csproj", "{D9F603AC-0038-455D-A4CE-E85A810D4AE4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

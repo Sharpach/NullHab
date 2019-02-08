@@ -8,13 +8,13 @@ namespace NullHab.App.Configuration
     {
         private readonly IConfiguration _configuration;
 
-        private string Key => _configuration["JwtKey"]; // ключ для шифрации
+        private string Key => _configuration.GetSection("JsonWebToken")["JwtKey"]; // ключ для шифрации
 
-        public string Issuer => _configuration["JwtIssuer"]; // издатель токена
+        public string Issuer => _configuration.GetSection("JsonWebToken")["JwtIssuer"]; // издатель токена
 
-        public string Audience => _configuration["JwtAudience"]; // потребитель токена
+        public string Audience => _configuration.GetSection("JsonWebToken")["JwtAudience"]; // потребитель токена
 
-        public int Lifetime => int.Parse(_configuration["JwtLifetime"]); // время жизни токена
+        public int Lifetime => int.Parse(_configuration.GetSection("JsonWebToken")["JwtLifetime"]); // время жизни токена
 
         public AuthOptions(IConfiguration configuration)
         {

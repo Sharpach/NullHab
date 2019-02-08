@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nelibur.ObjectMapper;
+using NullHab.App.Dto;
+using NullHab.AuthCore.Services;
 using NullHab.AuthCore.ViewModels;
 using System;
 using System.Threading.Tasks;
+using NullHab.App.Configuration;
 
 namespace NullHab.App.Controllers
 {
@@ -11,6 +15,13 @@ namespace NullHab.App.Controllers
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class AuthController : ControllerBase
     {
+        private readonly AuthService _authService;
+
+        public AuthController(AuthService authService)
+        {
+            _authService = authService;
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
@@ -20,19 +31,9 @@ namespace NullHab.App.Controllers
                 throw new ArgumentNullException(nameof(model));
             }
 
-            return new JsonResult(null);
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            return Ok();
+            var user = await _authService.Register(model.Email, model.UserName, model.Password);
+            var result = TinyMapper.Map<UserDto>(user);
+            return new JsonResult(result);
         }
 
         [HttpPost]
