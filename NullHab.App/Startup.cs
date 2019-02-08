@@ -6,7 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Nelibur.ObjectMapper;
 using NullHab.App.Configuration;
+using NullHab.App.Dto;
+using NullHab.AuthCore.Services;
 using NullHab.DAL.Models;
 using NullHab.DAL.Providers.Identity;
 using System;
@@ -74,7 +77,13 @@ namespace NullHab.App
             services.AddTransient(provider => new UserTable(connectionString));
             services.AddTransient(provider => new UserClaimsTable(connectionString));
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<AuthService>();
+
+            services.AddMvc(options =>
+                {
+                    options.Filters.Add(new ExceptionFilter());
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -88,9 +97,16 @@ namespace NullHab.App
                 app.UseHsts();
             }
 
+            Map();
+
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseMvc();
+        }
+
+        public void Map()
+        {
+            TinyMapper.Bind<User, UserDto>();
         }
     }
 }
