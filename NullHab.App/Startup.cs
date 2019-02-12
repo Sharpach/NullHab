@@ -9,6 +9,9 @@ using Microsoft.IdentityModel.Tokens;
 using Nelibur.ObjectMapper;
 using NullHab.App.Configuration;
 using NullHab.App.Dto;
+using NullHab.App.Middleware;
+using NullHab.AuthCore.Configuration;
+using NullHab.AuthCore.Contracts;
 using NullHab.AuthCore.Services;
 using NullHab.DAL.Models;
 using NullHab.DAL.Providers.Identity;
@@ -77,7 +80,13 @@ namespace NullHab.App
             services.AddTransient(provider => new UserTable(connectionString));
             services.AddTransient(provider => new UserClaimsTable(connectionString));
 
-            services.AddTransient<AuthService>();
+            services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<ITokenManager, TokenManager>();
+
+            services.AddSingleton(provider => new AuthOptions(Configuration));
+
+            services.AddTransient<JWTManagerMiddleware>();
+
 
             services.AddMvc(options =>
                 {
@@ -101,6 +110,9 @@ namespace NullHab.App
 
             app.UseHttpsRedirection();
             app.UseAuthentication();
+
+            app.UseMiddleware<JWTManagerMiddleware>();
+
             app.UseMvc();
         }
 
