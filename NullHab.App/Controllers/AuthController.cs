@@ -2,11 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Nelibur.ObjectMapper;
 using NullHab.App.Dto;
-using NullHab.AuthCore.Services;
+using NullHab.AuthCore.Contracts;
 using NullHab.AuthCore.ViewModels;
 using System;
 using System.Threading.Tasks;
-using NullHab.App.Configuration;
 
 namespace NullHab.App.Controllers
 {
@@ -15,11 +14,13 @@ namespace NullHab.App.Controllers
     [Authorize(AuthenticationSchemes = "Bearer")]
     public class AuthController : ControllerBase
     {
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
+        private readonly ITokenManager _tokenManager;
 
-        public AuthController(AuthService authService)
+        public AuthController(IAuthService authService, ITokenManager tokenManager)
         {
             _authService = authService;
+            _tokenManager = tokenManager;
         }
 
         [HttpPost]
@@ -45,19 +46,27 @@ namespace NullHab.App.Controllers
                 throw new ArgumentNullException(nameof(model));
             }
 
-            return new JsonResult(null);
+            var token = await _authService.Login(model.Email, model.Password);
+            return new JsonResult(token);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> RefreshToken()
+        public async Task<IActionResult> RefreshToken(string token)
         {
-            return new JsonResult(null);
+            var encodedJwt = await _tokenManager.RefreshToken();
+
+            return new JsonResult(encodedJwt);
         }
 
         [HttpGet]
         public async Task<IActionResult> CancelToken()
         {
+            if (await _tokenManager.IsCurrentActiveAsync())
+            {
+                await _tokenManager.DeactivateCurrentAsync();
+            }
+
             return Ok();
         }
     }
